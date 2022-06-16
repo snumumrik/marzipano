@@ -54,5 +54,5 @@ var marzipanoObjects = rects.map(function(rect) {
   // Add layer into stage.
   stage.addLayer(layer);
 
-  return { layer: layer, hotspotContainer: hotspotContainer, hotspot: hotspot}
+  return { layer: layer, hotspotContainer: hotspotContainer, hotspot: hotspot};
 });

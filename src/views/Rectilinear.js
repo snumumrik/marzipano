@@ -64,6 +64,10 @@ var fovLimitEpsilon = 0.000001;
  *     When `roll < 0`, the view rotates clockwise.
  *     When `roll > 0`, the view rotates counter-clockwise.
  *
+ * @property {number} initYaw Initial yaw angle, for horizon/north correction
+ * @property {number} initPitch Initial pitch angle, for horizon/north correction
+ * @property {number} initRoll Initial roll angle, for horizon/north correction
+ *
  * @property {fov} fov The vertical field of view, in the [0, π] range.
  */
 
@@ -112,6 +116,9 @@ function RectilinearView(params, limiter) {
   this._yaw = params && params.yaw != null ? params.yaw : defaultYaw;
   this._pitch = params && params.pitch != null ? params.pitch : defaultPitch;
   this._roll = params && params.roll != null ? params.roll : defaultRoll;
+  this._initYaw = params && params.initYaw != null ? params.initYaw : 0;
+  this._initPitch = params && params.initPitch != null ? params.initPitch : 0;
+  this._initRoll = params && params.initRoll != null ? params.initRoll : 0;
   this._fov = params && params.fov != null ? params.fov : defaultFov;
   this._width = params && params.width != null ?
     params.width : defaultWidth;
@@ -404,6 +411,9 @@ RectilinearView.prototype._resetParams = function() {
   params.fov = null;
   params.width = null;
   params.height = null;
+  params.initRoll = null;
+  params.initYaw = null;
+  params.initRoll = null;
 };
 
 
@@ -424,6 +434,9 @@ RectilinearView.prototype._update = function(params) {
   var oldProjectionCenterY = this._projectionCenterY;
   var oldWidth = this._width;
   var oldHeight = this._height;
+  var oldInitYaw = this._initYaw;
+  var oldInitPitch = this._initPitch;
+  var oldInitRoll = this._initRoll;
 
   // Fill in object with the new set of parameters to pass into the limiter.
   params.yaw = params.yaw != null ? params.yaw : oldYaw;
@@ -432,6 +445,9 @@ RectilinearView.prototype._update = function(params) {
   params.fov = params.fov != null ? params.fov : oldFov;
   params.width = params.width != null ? params.width : oldWidth;
   params.height = params.height != null ? params.height : oldHeight;
+  params.initYaw = params.initYaw != null ? params.initYaw : oldInitYaw;
+  params.initPitch = params.initPitch != null ? params.initPitch : oldInitPitch;
+  params.initRoll = params.initRoll != null ? params.initRoll : oldInitRoll;
   params.projectionCenterX = params.projectionCenterX != null ?
     params.projectionCenterX : oldProjectionCenterX;
   params.projectionCenterY = params.projectionCenterY != null ?
@@ -455,6 +471,9 @@ RectilinearView.prototype._update = function(params) {
   var newFov = params.fov;
   var newWidth = params.width;
   var newHeight = params.height;
+  var newInitYaw = params.initYaw;
+  var newInitPitch = params.initPitch;
+  var newInitRoll = params.initRoll;
   var newProjectionCenterX = params.projectionCenterX;
   var newProjectionCenterY = params.projectionCenterY;
 
@@ -472,6 +491,9 @@ RectilinearView.prototype._update = function(params) {
   this._fov = newFov;
   this._width = newWidth;
   this._height = newHeight;
+  this._initYaw = newInitYaw;
+  this._initRoll = newInitRoll;
+  this._initPitch = newInitPitch;
   this._projectionCenterX = newProjectionCenterX;
   this._projectionCenterY = newProjectionCenterY;
 
@@ -479,7 +501,8 @@ RectilinearView.prototype._update = function(params) {
   if (newYaw !== oldYaw || newPitch !== oldPitch || newRoll !== oldRoll ||
       newFov !== oldFov || newWidth !== oldWidth || newHeight !== oldHeight ||
       newProjectionCenterX !== oldProjectionCenterX ||
-      newProjectionCenterY !== oldProjectionCenterY) {
+      newProjectionCenterY !== oldProjectionCenterY ||
+      newInitYaw !== oldInitYaw || newInitPitch !== oldInitPitch || newInitRoll !== oldInitRoll) {
     this._projectionChanged = true;
     this.emit('change');
   }
@@ -617,6 +640,10 @@ RectilinearView.prototype._updateProjection = function() {
     mat4.rotateZ(projMatrix, projMatrix, this._roll);
     mat4.rotateX(projMatrix, projMatrix, this._pitch);
     mat4.rotateY(projMatrix, projMatrix, this._yaw);
+
+    mat4.rotateZ(projMatrix, projMatrix, this._initRoll);
+    mat4.rotateX(projMatrix, projMatrix, this._initPitch);
+    mat4.rotateY(projMatrix, projMatrix, this._initYaw);
 
     mat4.invert(invProjMatrix, projMatrix);
 
