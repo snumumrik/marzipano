@@ -19,6 +19,7 @@
 // Use progressive rendering to produce a more pleasing visual effect when
 // zooming past several resolution levels, at the cost of additional bandwidth
 // consumption.
+
 var viewer = new Marzipano.Viewer(
     document.getElementById('pano'), {stage: {progressive: true}});
 
@@ -55,6 +56,7 @@ var geometry = new Marzipano.CubeGeometry([
 
 // Create view.
 var limiter = Marzipano.RectilinearView.limit.traditional(65536, 100*Math.PI/180);
+limiter = Marzipano.util.compose(limiter, Marzipano.RectilinearView.limit.pitch(-Math.PI/4, Math.PI/4));
 var view = new Marzipano.RectilinearView({initRoll: Math.PI / 4}, limiter);
 
 // Create scene.

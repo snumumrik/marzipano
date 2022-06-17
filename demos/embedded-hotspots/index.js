@@ -52,7 +52,8 @@ var container = scene.hotspotContainer();
 
 // Create hotspot with different sources.
 container.createHotspot(document.getElementById('iframespot'), { yaw: 0.0335, pitch: -0.102 },
-  { perspective: { radius: 1640, extraTransforms: "rotateX(5deg)" }});
+  // { perspective: { radius: 1640, extraTransforms: "rotateX(-0.102rad)" }}); // make visually vertical
+  { perspective: { radius: 1640, extraTransforms: "rotateX(0.102rad) rotateX(90deg)" }}); // make visually horizontal
 container.createHotspot(document.getElementById('iframeselect'), { yaw: -0.35, pitch: -0.239 });
 
 // HTML sources.

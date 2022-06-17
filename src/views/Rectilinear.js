@@ -387,6 +387,9 @@ RectilinearView.prototype.setParameters = function(params) {
   this._params.pitch = params.pitch;
   this._params.roll = params.roll;
   this._params.fov = params.fov;
+  this._params.initYaw = params.initYaw;
+  this._params.initPitch = params.initPitch;
+  this._params.initRoll = params.initRoll;
   this._params.projectionCenterX = params.projectionCenterX;
   this._params.projectionCenterY = params.projectionCenterY;
   this._update(this._params);
@@ -887,6 +890,7 @@ RectilinearView.prototype.coordinatesToPerspectiveTransform = function(
 
   // Move back to sphere.
   transform += 'translateZ(' + decimal(-radius) + 'px) ';
+  // transform += 'rotateX(' + decimal(-coords.pitch) + 'rad) ';
 
   // Apply the extra transformations
   transform += extraTransforms + ' ';
